@@ -42,7 +42,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QPushButton" name="Import_file_2">
+      <widget class="QPushButton" name="Import_file">
        <property name="font">
         <font>
          <family>Arial</family>
@@ -74,7 +74,7 @@ QPushButton:hover {
 }</string>
        </property>
        <property name="text">
-        <string>Import file</string>
+        <string>Import CSV</string>
        </property>
        <property name="shortcut">
         <string/>
@@ -85,7 +85,7 @@ QPushButton:hover {
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="Choose_file_2">
+      <widget class="QPushButton" name="Choose_file">
        <property name="font">
         <font>
          <family>Arial</family>
@@ -128,7 +128,7 @@ QPushButton:hover {
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="Run_test_3">
+      <widget class="QPushButton" name="Run_test">
        <property name="font">
         <font>
          <family>Arial</family>

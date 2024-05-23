@@ -18,9 +18,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
+public slots:
     void on_Import_file_clicked();
+
+private slots:
     void on_actionExit_triggered();
+
 
 private:
     Ui::MainWindow *ui;
