@@ -11,8 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -20,14 +18,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
 void MainWindow::on_actionExit_triggered()
 {
     QApplication::quit();
 }
 
-
-void MainWindow::on_Import_file_clicked()
+void MainWindow::on_importFileBtn_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open CSV File"), "", tr("CSV Files (*.csv);;All Files (*)"));
     if (fileName.isEmpty()) {

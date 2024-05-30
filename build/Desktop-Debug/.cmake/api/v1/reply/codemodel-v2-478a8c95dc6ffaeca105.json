@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-e3407441af7835775dff.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "qt-trading-bot-analyzer",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "qt-trading-bot-analyzer::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-qt-trading-bot-analyzer-Debug-3a095e977e155c51458a.json",
+					"name" : "qt-trading-bot-analyzer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "qt-trading-bot-analyzer_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-qt-trading-bot-analyzer_autogen-Debug-715ce9e9ef077963c5b4.json",
+					"name" : "qt-trading-bot-analyzer_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "qt-trading-bot-analyzer_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-qt-trading-bot-analyzer_autogen_timestamp_deps-Debug-1fb66c5dff77a5f7df3b.json",
+					"name" : "qt-trading-bot-analyzer_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/fiornrrn/code/qt-trading-bot-analyzer/build/Desktop-Debug",
+		"source" : "/home/fiornrrn/code/qt-trading-bot-analyzer"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

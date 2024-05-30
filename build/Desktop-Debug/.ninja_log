@@ -1,0 +1,9 @@
+# ninja log v5
+3	35	1717111891260768902	qt-trading-bot-analyzer_autogen/timestamp	99e5bfd267c2c4ad
+3	35	1717111891260768902	qt-trading-bot-analyzer_autogen/mocs_compilation.cpp	99e5bfd267c2c4ad
+3	35	1717111891260768902	/home/fiornrrn/code/qt-trading-bot-analyzer/build/Desktop-Debug/qt-trading-bot-analyzer_autogen/mocs_compilation.cpp	99e5bfd267c2c4ad
+1749	2039	1717111893262773939	qt-trading-bot-analyzer	31bbc8fb879ce418
+3	35	1717111891260768902	/home/fiornrrn/code/qt-trading-bot-analyzer/build/Desktop-Debug/qt-trading-bot-analyzer_autogen/timestamp	99e5bfd267c2c4ad
+243	1773	1717111788353496585	CMakeFiles/qt-trading-bot-analyzer.dir/qt-trading-bot-analyzer_autogen/mocs_compilation.cpp.o	9cb02888ef5f73bc
+243	1830	1717111788410496743	CMakeFiles/qt-trading-bot-analyzer.dir/main.cpp.o	b149404bc623e01d
+36	1749	1717111892974773214	CMakeFiles/qt-trading-bot-analyzer.dir/mainwindow.cpp.o	a803fd0c4184e1ca

@@ -19,7 +19,7 @@ public:
     ~MainWindow();
 
 public slots:
-    void on_Import_file_clicked();
+    void on_importFileBtn_clicked();
 
 private slots:
     void on_actionExit_triggered();
