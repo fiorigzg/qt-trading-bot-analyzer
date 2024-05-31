@@ -11,7 +11,6 @@
 
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
-#include <QtOpenGLWidgets/QOpenGLWidget>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
@@ -44,10 +43,8 @@ public:
     QGridLayout *gridLayout_5;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents;
-    QPushButton *runTestBtn;
+    QPushButton *runBtn;
     QWidget *openGLBox;
-    QGridLayout *gridLayout_4;
-    QOpenGLWidget *openGLWidget;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -147,7 +144,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 230, 458));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 214, 426));
         scrollArea->setWidget(scrollAreaWidgetContents);
 
         gridLayout_5->addWidget(scrollArea, 0, 0, 1, 1);
@@ -155,16 +152,16 @@ public:
 
         gridLayout_3->addWidget(ordersBox, 4, 0, 1, 1);
 
-        runTestBtn = new QPushButton(menuBox);
-        runTestBtn->setObjectName("runTestBtn");
-        runTestBtn->setMinimumSize(QSize(0, 40));
-        runTestBtn->setCursor(QCursor(Qt::PointingHandCursor));
-        runTestBtn->setStyleSheet(QString::fromUtf8("border-style: solid;\n"
+        runBtn = new QPushButton(menuBox);
+        runBtn->setObjectName("runBtn");
+        runBtn->setMinimumSize(QSize(0, 40));
+        runBtn->setCursor(QCursor(Qt::PointingHandCursor));
+        runBtn->setStyleSheet(QString::fromUtf8("border-style: solid;\n"
 "border-radius: 6px;\n"
 "background-color: #3E4257;\n"
 "font-weight: 600;"));
 
-        gridLayout_3->addWidget(runTestBtn, 2, 0, 1, 1);
+        gridLayout_3->addWidget(runBtn, 2, 0, 1, 1);
 
 
         gridLayout_2->addWidget(menuBox, 0, 1, 1, 1);
@@ -175,14 +172,6 @@ public:
 "border-radius: 6px;\n"
 "background-color: #1D2033;\n"
 "font-weight: 600;"));
-        gridLayout_4 = new QGridLayout(openGLBox);
-        gridLayout_4->setObjectName("gridLayout_4");
-        gridLayout_4->setContentsMargins(9, 9, 9, 9);
-        openGLWidget = new QOpenGLWidget(openGLBox);
-        openGLWidget->setObjectName("openGLWidget");
-
-        gridLayout_4->addWidget(openGLWidget, 0, 0, 1, 1);
-
 
         gridLayout_2->addWidget(openGLBox, 0, 0, 1, 1);
 
@@ -204,7 +193,7 @@ public:
         importFileBtn->setText(QCoreApplication::translate("MainWindow", "Import file", nullptr));
         result->setText(QCoreApplication::translate("MainWindow", "1000", nullptr));
         currency->setText(QCoreApplication::translate("MainWindow", "$", nullptr));
-        runTestBtn->setText(QCoreApplication::translate("MainWindow", "Run test", nullptr));
+        runBtn->setText(QCoreApplication::translate("MainWindow", "Run / pause", nullptr));
     } // retranslateUi
 
 };
