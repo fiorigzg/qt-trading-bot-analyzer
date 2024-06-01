@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "openglgraph.h"
+
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
@@ -11,8 +13,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-
+    auto *openGLBox = findChild<QWidget*>("openGLBox");
+    QVBoxLayout *openGLLayout = new QVBoxLayout(openGLBox);
+    openGLGraph = new OpenGLGraph(openGLBox);
+    openGLLayout->addWidget(openGLGraph);
+    openGLBox->setLayout(openGLLayout);
+    openGLGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 MainWindow::~MainWindow()
@@ -20,14 +26,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
 void MainWindow::on_actionExit_triggered()
 {
     QApplication::quit();
 }
 
-
-void MainWindow::on_Import_file_clicked()
+void MainWindow::on_importFileBtn_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open CSV File"), "", tr("CSV Files (*.csv);;All Files (*)"));
     if (fileName.isEmpty()) {
@@ -50,3 +54,7 @@ void MainWindow::on_Import_file_clicked()
     QMessageBox::information(this, tr("File Imported"), tr("CSV file imported successfully."));
 }
 
+void MainWindow::on_runBtn_clicked()
+{
+    openGLGraph->switchTimer();
+}
