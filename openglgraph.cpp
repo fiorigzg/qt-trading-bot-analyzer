@@ -33,7 +33,7 @@ void OpenGLGraph::switchTimer()
     }
     timerStarted = !timerStarted;
     QTextStream out(stdout);
-    out << "Timer " << (timerStarted ? "stareted" : "stopped") << "\n";
+    out << "Timer " << (timerStarted ? "started" : "stopped") << "\n";
 }
 
 float OpenGLGraph::addRandomPrice()
