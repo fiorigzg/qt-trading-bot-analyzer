@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>350</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>400</width>
-    <height>350</height>
+    <height>400</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -35,20 +35,23 @@ color: white;</string>
     <property name="spacing">
      <number>9</number>
     </property>
-    <item row="5" column="0" colspan="2">
-     <widget class="QLabel" name="forgotPasswordLabel">
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="passwordLineEdit">
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>30</height>
+       </size>
+      </property>
       <property name="styleSheet">
-       <string notr="true">font-size: 12px;
-color: #E75151;</string>
+       <string notr="true">border-style: solid;
+border-radius: 6px;
+background-color: #3E4257;
+font-weight: 600;
+color: white;</string>
       </property>
-      <property name="text">
-       <string>&lt;a href=&quot;#&quot; style=&quot;color: #E75151;&quot;&gt;Forgot Password?&lt;/a&gt;</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="openExternalLinks">
-       <bool>true</bool>
+      <property name="echoMode">
+       <enum>QLineEdit::Password</enum>
       </property>
      </widget>
     </item>
@@ -71,65 +74,6 @@ font-weight: 600;</string>
       </property>
       <property name="text">
        <string>Login</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="passwordLabel">
-      <property name="styleSheet">
-       <string notr="true">font-size: 14px;
-font-weight: bold;
-color: white;</string>
-      </property>
-      <property name="text">
-       <string>Password:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QLabel" name="titleLabel">
-      <property name="styleSheet">
-       <string notr="true">font-size: 24px;
-font-weight: bold;
-color: white;</string>
-      </property>
-      <property name="text">
-       <string>Login</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="usernameLabel">
-      <property name="styleSheet">
-       <string notr="true">font-size: 14px;
-font-weight: bold;
-color: white;</string>
-      </property>
-      <property name="text">
-       <string>Username:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="passwordLineEdit">
-      <property name="minimumSize">
-       <size>
-        <width>200</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-style: solid;
-border-radius: 6px;
-background-color: #3E4257;
-font-weight: 600;
-color: white;</string>
-      </property>
-      <property name="echoMode">
-       <enum>QLineEdit::Password</enum>
       </property>
      </widget>
     </item>
@@ -157,6 +101,71 @@ border-radius: 6px;
 background-color: #3E4257;
 font-weight: 600;
 color: white;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="usernameLabel">
+      <property name="styleSheet">
+       <string notr="true">font-size: 14px;
+font-weight: bold;
+color: white;</string>
+      </property>
+      <property name="text">
+       <string>Username:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="titleLabel">
+      <property name="styleSheet">
+       <string notr="true">font-size: 24px;
+font-weight: bold;
+color: white;</string>
+      </property>
+      <property name="text">
+       <string>Login</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="passwordLabel">
+      <property name="styleSheet">
+       <string notr="true">font-size: 14px;
+font-weight: bold;
+color: white;</string>
+      </property>
+      <property name="text">
+       <string>Password:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0" colspan="2">
+     <widget class="QLabel" name="registerLabel">
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e75151;&quot;&gt;Create an account&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="openExternalLinks">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="2">
+     <widget class="QLabel" name="forgotPasswordLabel">
+      <property name="text">
+       <string>&lt;a href=&quot;#&quot; style=&quot;color: #E75151;&quot;&gt;Forgot Password?&lt;/a&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="openExternalLinks">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
