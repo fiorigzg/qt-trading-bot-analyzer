@@ -11,7 +11,7 @@ class HttpClient : public QObject
 public:
     explicit HttpClient(QObject *parent = nullptr);
     void loginUser(const QString &username, const QString &password);
-    void registerUser(const QString &username, const QString &password, const QString &email);
+    void registerUser(const QString &username, const QString &password);
 
 signals:
     void loginSuccess();
@@ -21,7 +21,7 @@ signals:
 
 private slots:
     void onLoginFinished(QNetworkReply *reply);
-    void onRegisterFinished(QNetworkReply *reply);
+    void onRegistrationFinished(QNetworkReply *reply);
 
 private:
     QNetworkAccessManager *networkManager;
