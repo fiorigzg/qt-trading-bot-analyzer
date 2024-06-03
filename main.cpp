@@ -1,12 +1,12 @@
-#include "mainwindow.h"
+#include "loginwindow.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.setWindowTitle("Trading Bot Analyzer");
-    w.show();
+    LoginWindow loginWindow;
+    loginWindow.setWindowTitle("Trading Bot Analyzer");
+    loginWindow.show();
     return a.exec();
 }
