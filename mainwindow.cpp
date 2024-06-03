@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "choice_dialog.h"
-#include "search_dialog.h"
+#include "search/choice_dialog.h"
+#include "search/search_dialog.h"
 #include "graph/openglgraph.h"
 
 #include <QProgressBar>

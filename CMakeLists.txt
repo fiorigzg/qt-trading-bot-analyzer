@@ -38,9 +38,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         graph/utils.cpp
         
         flask/users.csv
-        choice_dialog.h
-        search_dialog.h search_dialog.cpp
-        ticker.json
+        
+        search/choice_dialog.h
+        search/search_dialog.h
+        search/search_dialog.cpp
+        search/ticker.json
 
         accsys/registerwindow.ui
         accsys/registerwindow.h
