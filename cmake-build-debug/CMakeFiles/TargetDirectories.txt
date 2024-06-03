@@ -1,9 +1,0 @@
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/qt-trading-bot-analyzer.dir
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/list_install_components.dir
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/install.dir
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/install/local.dir
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/install/strip.dir
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/qt-trading-bot-analyzer_autogen_timestamp_deps.dir
-/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug/CMakeFiles/qt-trading-bot-analyzer_autogen.dir
