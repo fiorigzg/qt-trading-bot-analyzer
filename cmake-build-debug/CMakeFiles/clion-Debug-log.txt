@@ -1,0 +1,5 @@
+/home/ubuntus/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/ubuntus/.local/share/JetBrains/Toolbox/apps/clion/bin/ninja/linux/x64/ninja -G Ninja -DPython_EXECUTABLE=/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/venv/bin/python -DPython3_EXECUTABLE=/home/ubuntus/Desktop/code/qt-trading-bot-analyzer/venv/bin/python -S /home/ubuntus/Desktop/code/qt-trading-bot-analyzer -B /home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug
+-- Could NOT find XKB (missing: XKB_LIBRARY XKB_INCLUDE_DIR) (Required is at least version "0.5.0")
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/ubuntus/Desktop/code/qt-trading-bot-analyzer/cmake-build-debug
