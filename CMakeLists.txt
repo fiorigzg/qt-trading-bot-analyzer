@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_VERSION_MAJOR 6)
 
+
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets)
 find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
@@ -26,6 +27,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(qt-trading-bot-analyzer
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+
         mainwindow.h
         mainwindow.cpp
         mainwindow.ui
@@ -36,6 +38,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         graph/utils.cpp
         
         flask/users.csv
+        choice_dialog.h
+        search_dialog.h search_dialog.cpp
+        ticker.json
 
         accsys/registerwindow.ui
         accsys/registerwindow.h
@@ -58,7 +63,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(qt-trading-bot-analyzer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(qt-trading-bot-analyzer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
 target_link_libraries(qt-trading-bot-analyzer PRIVATE Qt6::OpenGLWidgets)
 target_link_libraries(qt-trading-bot-analyzer PRIVATE Qt6::Network)
 
