@@ -1,18 +1,33 @@
 #include "openglgraph.h"
+#include "utils.h"
+#include "mainwindow.h"
 
 #include <QTimer>
 #include <QTextStream>
+#include <QLabel>
+#include <QString>
+#include <string>
+#include <vector>
+#include <algorithm>
 
 
-OpenGLGraph::OpenGLGraph(QWidget *parent)
-    : QOpenGLWidget(parent)
+OpenGLGraph::OpenGLGraph(QWidget *parent, QLabel *portfolio)
+    : QOpenGLWidget(parent), portfolio(portfolio)
 {
 }
 
 void OpenGLGraph::initializeGL()
 {
+    // Open gl
     initializeOpenGLFunctions();
-    glClearColor(0.11, 0.13, 0.20, 1.0); // Set the clear color to black
+    glClearColor(0.11, 0.13, 0.20, 1.0);
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&OpenGLGraph::tickTimer));
+
+    // Prices generation
+    PricesRes pricesRes = generatePrices();
+    prices = pricesRes.prices;
+    maxCandle = pricesRes.maxCandle;
+    maxPrice = pricesRes.maxPrice;
 }
 
 void OpenGLGraph::resizeGL(int w, int h)
@@ -22,7 +37,7 @@ void OpenGLGraph::resizeGL(int w, int h)
 
 void OpenGLGraph::switchTimer()
 {
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&OpenGLGraph::update));
+    QTextStream out(stdout);
     if(timerStarted == false)
     {
         timer->start(400);
@@ -32,51 +47,98 @@ void OpenGLGraph::switchTimer()
         timer->stop();
     }
     timerStarted = !timerStarted;
-    QTextStream out(stdout);
+
     out << "Timer " << (timerStarted ? "started" : "stopped") << "\n";
 }
 
-float OpenGLGraph::addRandomPrice()
+void OpenGLGraph::tickTimer()
 {
-    auto now = std::chrono::high_resolution_clock::now();
-    auto nanos = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
-    srand(static_cast<unsigned int>(nanos));
-    float newPrice = ((float)std::rand() / (RAND_MAX)) * 2 - 1;
-    this->prices.insert(prices.begin(), newPrice);
-    return newPrice;
+    if(currentCandle >= maxCandle)
+        return;
+
+    QTextStream out(stdout);
+    ++currentCandle;
+
+    // orders generation
+    // std::vector<Price>(prices.begin(), prices.end() - (maxCandle - currentCandle))
+    Order newOrder = createOrder(prices[currentCandle], currentCandle);
+    if(newOrder.sum != 0)
+    {
+        orders.push_back(newOrder);
+        portfolioSum.usd += newOrder.sum;
+        portfolioSum.othCur += newOrder.sum / newOrder.price;
+        out << "Order " << newOrder.price << " " << newOrder.sum << "\n";
+    }
+    portfolio->setText(QString::number(portfolioSum.usd + portfolioSum.othCur * prices[currentCandle].end));
+
+    OpenGLGraph::update();
+
+    out << "Candle " << currentCandle << "\n";
 }
 
 void OpenGLGraph::paintGL()
 {
     QTextStream out(stdout);
-    out << "Updated " << this->timerUpdatedCount << "\n";
-    // out << "price " << *this->prices.end() << "\n";
-
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.11, 0.13, 0.20, 1.0);
 
     float marginRight = 1;
-    float lastPrice = this->addRandomPrice();
-    for(const auto price : this->prices)
-    {
-        if(lastPrice != 3.0) {
-            if(price < lastPrice)
-                glColor3f(0.31, 0.51, 0.74);
-            else
-                glColor3f(0.59, 0.78, 1.00);
+    std::vector<Price> thisPrices(prices.begin(), prices.end() - (maxCandle - currentCandle));
+    std::reverse(thisPrices.begin(), thisPrices.end());
 
-            glBegin(GL_POLYGON);
-            glVertex2f(marginRight, lastPrice);
-            glVertex2f(marginRight, price);
-            glVertex2f(marginRight + 0.07, price);
-            glVertex2f(marginRight + 0.07, lastPrice);
-            glEnd();
-            marginRight -= 0.09;
+    for(size_t thisCandle = currentCandle; thisCandle != 0; --thisCandle)
+    {
+        Price thisPrice = prices[thisCandle];
+        float priceStart = thisPrice.start / maxPrice * 2 - 1;
+        float priceEnd = thisPrice.end / maxPrice * 2 - 1;
+        float priceMin = thisPrice.min / maxPrice * 2 - 1;
+        float priceMax = thisPrice.max / maxPrice * 2 - 1;
+
+        // draw candle
+        if(thisPrice.end < thisPrice.start)
+            glColor3f(0.31, 0.51, 0.74);
+        else
+            glColor3f(0.59, 0.78, 1.00);
+
+        glBegin(GL_POLYGON);
+        glVertex2f(marginRight, priceStart);
+        glVertex2f(marginRight, priceEnd);
+        glVertex2f(marginRight + 0.07, priceEnd);
+        glVertex2f(marginRight + 0.07, priceStart);
+        glEnd();
+
+        glBegin(GL_POLYGON);
+        glVertex2f(marginRight + 0.03, priceMin);
+        glVertex2f(marginRight + 0.03, priceMax);
+        glVertex2f(marginRight + 0.04, priceMax);
+        glVertex2f(marginRight + 0.04, priceMin);
+        glEnd();
+
+        // draw orders
+        for(const auto order : orders)
+        {
+            if(order.candle != thisCandle)
+                continue;
+            else
+            {
+                float priceOrder = order.price / maxPrice * 2 - 1;
+
+                if(order.sum < 0)
+                    glColor3f(1.00, 0.19, 0.46);
+                else
+                    glColor3f(0.31, 0.86, 0.57);
+
+                glBegin(GL_POLYGON);
+                glVertex2f(marginRight, priceOrder + 0.035);
+                glVertex2f(marginRight, priceOrder - 0.035);
+                glVertex2f(marginRight + 0.07, priceOrder - 0.035);
+                glVertex2f(marginRight + 0.07, priceOrder + 0.035);
+                glEnd();
+            }
         }
-        lastPrice = price;
+
+        marginRight -= 0.09;
     }
 
     glFlush();
-
-    this->timerUpdatedCount++;
 }
