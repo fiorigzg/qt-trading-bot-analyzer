@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QOpenGLWidget>
 #include <QBrush>
-#include "openglgraph.h"
+#include "graph/openglgraph.h"
 
 
 QT_BEGIN_NAMESPACE

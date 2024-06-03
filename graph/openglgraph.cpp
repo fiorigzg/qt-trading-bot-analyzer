@@ -1,6 +1,6 @@
 #include "openglgraph.h"
 #include "utils.h"
-#include "mainwindow.h"
+#include "../mainwindow.h"
 
 #include <QTimer>
 #include <QTextStream>

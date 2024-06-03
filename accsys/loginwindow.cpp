@@ -1,6 +1,6 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
-#include "mainwindow.h"
+#include "../mainwindow.h"
 #include <QMessageBox>
 #include "HttpClient.h"
 

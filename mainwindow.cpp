@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "openglgraph.h"
+#include "graph/openglgraph.h"
 
 #include <QFileDialog>
 #include <QFile>
