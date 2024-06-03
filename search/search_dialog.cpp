@@ -14,6 +14,18 @@
 #include <QDate>
 #include <QPushButton>
 #include <QLabel>
+#include <QDebug>
+
+QString filename(const QString &path) {
+    int lastSlashIndex = -1;
+    for (int i = 0; i < path.length(); ++i) {
+        if (path[i] == '/' || path[i] == '\\') {
+            lastSlashIndex = i;
+        }
+    }
+    QString fileName = path.mid(lastSlashIndex);
+    return fileName;
+}
 
 QString toTimestamp(QDateEdit *dateEdit) {
     // Get the QDate from the QDateEdit
@@ -96,17 +108,22 @@ void SearchDialog::loadSearch(const QString &filePath, QMap<QString, QString> &d
     QByteArray jsonData;
     if (!file1.open(QIODevice::ReadOnly | QIODevice::Text)) {
         file1.close();
-        QFile file2(QCoreApplication::applicationDirPath() + filePath);
+        QFile file2(QCoreApplication::applicationDirPath() + filename(filePath));
         if (!file2.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qWarning("There's an error with loading search system");
-            return;
+            file2.close();
+            QFile file3("/ticker.json");
+            if (!file3.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                qWarning("There's an error with loading search system");
+                return;
+            } else {
+                jsonData = file3.readAll();
+            }
         } else {
             jsonData = file2.readAll();
         }
     } else {
         jsonData = file1.readAll();
     }
-
 
     QJsonDocument doc = QJsonDocument::fromJson(jsonData);
     if (doc.isNull() || !doc.isObject()) {
