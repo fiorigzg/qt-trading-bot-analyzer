@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "openglgraph.h"
 #include "choice_dialog.h"
 #include "search_dialog.h"
+#include "graph/openglgraph.h"
 
 #include <QProgressBar>
 #include <QtNetwork/qnetworkaccessmanager.h>
@@ -21,9 +21,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    auto *portfolio = findChild<QLabel*>("portfolio");
+
     auto *openGLBox = findChild<QWidget*>("openGLBox");
     QVBoxLayout *openGLLayout = new QVBoxLayout(openGLBox);
-    openGLGraph = new OpenGLGraph(openGLBox);
+    openGLGraph = new OpenGLGraph(openGLBox, portfolio);
     openGLLayout->addWidget(openGLGraph);
     openGLBox->setLayout(openGLLayout);
     openGLGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

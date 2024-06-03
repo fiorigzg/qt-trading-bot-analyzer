@@ -7,7 +7,7 @@
 #include <QProgressBar>
 #include <QtNetwork/qnetworkaccessmanager.h>
 #include <QtNetwork/qnetworkreply.h>
-#include "openglgraph.h"
+#include "graph/openglgraph.h"
 
 
 QT_BEGIN_NAMESPACE
