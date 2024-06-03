@@ -11,7 +11,7 @@ HttpClient::HttpClient(QObject *parent) : QObject(parent)
 
 void HttpClient::loginUser(const QString &username, const QString &password)
 {
-    QUrl url("http://localhost:5000/login");
+    QUrl url("http://127.0.0.1:5000/login");
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
