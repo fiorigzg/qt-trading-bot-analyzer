@@ -1,6 +1,6 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
-#include "../mainwindow.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 #include "HttpClient.h"
 
@@ -39,11 +39,6 @@ void LoginWindow::on_loginBtn_clicked()
 
 void LoginWindow::on_registerBtn_clicked()
 {
-    if (!registerWindow) {
-        registerWindow = new RegisterWindow(this);
-        connect(registerWindow, &RegisterWindow::destroyed, this, [this]() {
-            registerWindow = nullptr;
-        });
-    }
+    RegisterWindow *registerWindow = new RegisterWindow();
     registerWindow->show();
 }

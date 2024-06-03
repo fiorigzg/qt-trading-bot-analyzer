@@ -14,7 +14,10 @@ set(QT_VERSION_MAJOR 6)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets)
 find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
+find_package(Qt6 REQUIRED COMPONENTS OpenGL)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/accsys)
+include_directories(${OPENGL_INCLUDE_DIRS})
+
 
 set(PROJECT_SOURCES
         main.cpp
