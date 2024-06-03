@@ -28,6 +28,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 
+        search/ticker.json
+
         mainwindow.h
         mainwindow.cpp
         mainwindow.ui
@@ -39,7 +41,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         
         flask/users.csv
         
-        search/ticker.json
         search/choice_dialog.h
         search/search_dialog.h
         search/search_dialog.cpp

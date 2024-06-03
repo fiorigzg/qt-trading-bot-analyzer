@@ -9,10 +9,27 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
+#include <QCoreApplication>
 #include <QMessageBox>
 #include <QDate>
 #include <QPushButton>
-#include <QLabel> 
+#include <QLabel>
+
+QString toTimestamp(QDateEdit *dateEdit) {
+    // Get the QDate from the QDateEdit
+    QDate date = dateEdit->date();
+
+    // Convert QDate to QDateTime (at the start of the day)
+    QDateTime dateTime(date, QTime(0, 0));
+
+    // Get the Unix timestamp from QDateTime
+    qint64 unixTimestamp = dateTime.toSecsSinceEpoch();
+
+    // Convert the Unix timestamp to QString
+    QString timestampStr = QString::number(unixTimestamp);
+
+    return timestampStr;
+}
 
 QString SearchDialog::getSelectedItem() const
 {
@@ -49,8 +66,8 @@ SearchDialog::SearchDialog(QWidget *parent)
 
     intervalComboBox = new QComboBox(this);
     intervalComboBox->addItem("1 day", "1d");
-    intervalComboBox->addItem("1 week", "1wk");
-    intervalComboBox->addItem("1 month", "1mo");
+    intervalComboBox->addItem("1 week", "1w");
+    intervalComboBox->addItem("1 month", "1m");
 
     layout->addWidget(new QLabel("start date:"));
     layout->addWidget(startDateEdit);
@@ -75,14 +92,21 @@ SearchDialog::SearchDialog(QWidget *parent)
 }
 
 void SearchDialog::loadSearch(const QString &filePath, QMap<QString, QString> &dictionary) {
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Couldn't open file:" << filePath;
-        return;
+    QFile file1(".." + filePath);
+    QByteArray jsonData;
+    if (!file1.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        file1.close();
+        QFile file2(QCoreApplication::applicationDirPath() + filePath);
+        if (!file2.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qWarning("There's an error with loading search system");
+            return;
+        } else {
+            jsonData = file2.readAll();
+        }
+    } else {
+        jsonData = file1.readAll();
     }
 
-    QByteArray jsonData = file.readAll();
-    file.close();
 
     QJsonDocument doc = QJsonDocument::fromJson(jsonData);
     if (doc.isNull() || !doc.isObject()) {
@@ -140,3 +164,49 @@ void SearchDialog::validateInputs() {
                    startDateEdit->date() < endDateEdit->date() &&
                    !intervalComboBox->currentText().isEmpty();
 }
+
+
+
+// void MainWindow::onDownloadButtonClicked() {
+//     // QString url = constructYahooFinanceUrl(ticker, startDate, endDate, interval);
+//     // QNetworkRequest request{QUrl(url)}; 
+
+//     // networkReply = networkManager->get(request);
+
+//     // // Connect signals for progress and completion
+//     // connect(networkReply, &QNetworkReply::downloadProgress, this, &MainWindow::onDownloadProgress);
+//     // connect(networkReply, &QNetworkReply::finished, this, &MainWindow::onDownloadFinished);
+// }
+
+// void MainWindow::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+// {
+//     if (bytesTotal > 0) {
+//         progressBar->setValue(static_cast<int>((bytesReceived * 100) / bytesTotal));
+//     }
+// }
+
+// void MainWindow::onDownloadFinished()
+// {
+//     if (networkReply->error() == QNetworkReply::NoError) {
+//         QByteArray data = networkReply->readAll();
+
+//         // Save the downloaded data to a file
+//         QString fileName = QFileDialog::getSaveFileName(this, tr("Save CSV File"), "", tr("CSV Files (*.csv);;All Files (*)"));
+//         if (!fileName.isEmpty()) {
+//             QFile file(fileName);
+//             if (file.open(QIODevice::WriteOnly)) {
+//                 file.write(data);
+//                 file.close();
+//                 QMessageBox::information(this, tr("Download Complete"), tr("The file has been downloaded successfully."));
+//             } else {
+//                 QMessageBox::warning(this, tr("File Error"), tr("Unable to save the file."));
+//             }
+//         }
+//     } else {
+//         QMessageBox::warning(this, tr("Download Error"), tr("Failed to download the file."));
+//     }
+
+//     networkReply->deleteLater();
+//     networkReply = nullptr;
+//     progressBar->setValue(0);
+// }
