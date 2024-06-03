@@ -35,33 +35,6 @@ color: white;</string>
     <property name="spacing">
      <number>9</number>
     </property>
-    <item row="3" column="1">
-     <widget class="QCheckBox" name="rememberMeCheckBox">
-      <property name="styleSheet">
-       <string notr="true">color: white;</string>
-      </property>
-      <property name="text">
-       <string>Remember Me</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="usernameLineEdit">
-      <property name="minimumSize">
-       <size>
-        <width>200</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-style: solid;
-border-radius: 6px;
-background-color: #3E4257;
-font-weight: 600;
-color: white;</string>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="1">
      <widget class="QLineEdit" name="passwordLineEdit">
       <property name="minimumSize">
@@ -85,15 +58,52 @@ color: white;</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="passwordLabel">
+    <item row="3" column="1">
+     <widget class="QCheckBox" name="rememberMeCheckBox">
       <property name="styleSheet">
-       <string notr="true">font-size: 14px;
-font-weight: bold;
-color: white;</string>
+       <string notr="true">color: white;</string>
       </property>
       <property name="text">
-       <string>Password:</string>
+       <string>Remember Me</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="2">
+     <widget class="QPushButton" name="loginBtn">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-style: solid;
+border-radius: 6px;
+background-color: #3E4257;
+font-weight: 600;</string>
+      </property>
+      <property name="text">
+       <string>Login</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="usernameLineEdit">
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-style: solid;
+border-radius: 6px;
+background-color: #3E4257;
+font-weight: 600;
+color: white;</string>
       </property>
      </widget>
     </item>
@@ -131,42 +141,20 @@ color: white;</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="0" colspan="2">
-     <widget class="QPushButton" name="loginBtn">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>40</height>
-       </size>
-      </property>
-      <property name="cursor">
-       <cursorShape>PointingHandCursor</cursorShape>
-      </property>
+    <item row="2" column="0">
+     <widget class="QLabel" name="passwordLabel">
       <property name="styleSheet">
-       <string notr="true">border-style: solid;
-border-radius: 6px;
-background-color: #3E4257;
-font-weight: 600;</string>
+       <string notr="true">font-size: 14px;
+font-weight: bold;
+color: white;</string>
       </property>
       <property name="text">
-       <string>Login</string>
+       <string>Password:</string>
       </property>
      </widget>
     </item>
     <item row="0" column="0" colspan="2">
      <widget class="QLabel" name="titleLabel">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>50</height>
-       </size>
-      </property>
       <property name="styleSheet">
        <string notr="true">font-size: 24px;
 font-weight: bold;

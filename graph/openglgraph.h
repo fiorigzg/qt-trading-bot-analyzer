@@ -7,8 +7,8 @@
 #include <QOpenGLFunctions>
 #include <QTimer>
 #include <QLabel>
-// #include <GL/gl.h>
-// #include <GL/glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 class OpenGLGraph : public QOpenGLWidget, protected QOpenGLFunctions
 {
