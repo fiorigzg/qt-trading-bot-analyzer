@@ -25,7 +25,7 @@ void HttpClient::loginUser(const QString &username, const QString &password)
     networkManager->post(request, data);
 }
 
-void HttpClient::registerUser(const QString &username, const QString &password, const QString &email)
+void HttpClient::registerUser(const QString &username, const QString &password)
 {
     QUrl url("http://127.0.0.1:5000/register");
     QNetworkRequest request(url);
@@ -34,12 +34,11 @@ void HttpClient::registerUser(const QString &username, const QString &password, 
     QJsonObject json;
     json["username"] = username;
     json["password"] = password;
-    json["email"] = email;
 
     QJsonDocument doc(json);
     QByteArray data = doc.toJson();
 
-    connect(networkManager, &QNetworkAccessManager::finished, this, &HttpClient::onRegisterFinished);
+    connect(networkManager, &QNetworkAccessManager::finished, this, &HttpClient::onRegistrationFinished);
     networkManager->post(request, data);
 }
 
@@ -59,7 +58,7 @@ void HttpClient::onLoginFinished(QNetworkReply *reply)
     reply->deleteLater();
 }
 
-void HttpClient::onRegisterFinished(QNetworkReply *reply)
+void HttpClient::onRegistrationFinished(QNetworkReply *reply)
 {
     if (reply->error() == QNetworkReply::NoError) {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
