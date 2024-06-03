@@ -37,7 +37,6 @@ SearchDialog::SearchDialog(QWidget *parent)
     connect(searchEdit, &QLineEdit::textChanged, this, &SearchDialog::performSearch);
     connect(resultView, &QListView::clicked, this, &SearchDialog::itemSelected);
 
-    // Add date and interval selection
     startDateEdit = new QDateEdit(QDate::currentDate().addYears(-1), this);
     startDateEdit->setCalendarPopup(true);
     startDateEdit->setMinimumDate(QDate(1990, 1, 1));
@@ -60,16 +59,9 @@ SearchDialog::SearchDialog(QWidget *parent)
     layout->addWidget(new QLabel("candle interval:"));
     layout->addWidget(intervalComboBox);
 
-    // Add the download button
-    downloadButton = new QPushButton("Download", this);
-    downloadButton->setStyleSheet("background-color: green; color: white;");
-    downloadButton->setEnabled(false);
-    layout->addWidget(downloadButton);
-
     connect(startDateEdit, &QDateEdit::dateChanged, this, &SearchDialog::validateInputs);
     connect(endDateEdit, &QDateEdit::dateChanged, this, &SearchDialog::validateInputs);
     connect(intervalComboBox, &QComboBox::currentIndexChanged, this, &SearchDialog::validateInputs);
-    connect(downloadButton, &QPushButton::clicked, this, &QDialog::accept);
     setLayout(layout);
 
     if (parent) {
@@ -147,6 +139,4 @@ void SearchDialog::validateInputs() {
     bool isValid = !selectedItem.isEmpty() &&
                    startDateEdit->date() < endDateEdit->date() &&
                    !intervalComboBox->currentText().isEmpty();
-
-    downloadButton->setEnabled(isValid);
 }

@@ -4,3 +4,6 @@ build
 CMakeLists.txt.*
 *.idea
 .DB_Store
+venv
+
+

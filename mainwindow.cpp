@@ -71,7 +71,7 @@ void MainWindow::on_importFileBtn_clicked()
     else if (selector.response() == 2)
     {
         SearchDialog stockSearch = SearchDialog(this);
-        QString filePath = "../ticker.json";
+        QString filePath = "../search/ticker.json";
         stockSearch.loadSearch(filePath, dictionary);
         stockSearch.exec();
     }

@@ -10,7 +10,6 @@
 #include <QDateEdit>
 #include <QComboBox>
 #include <QDialog>
-#include <QPushButton>
 
 class SearchDialog : public QDialog {
     Q_OBJECT
@@ -23,7 +22,6 @@ public:
     QString getInterval() const;
     void loadSearch(const QString &filePath, QMap<QString, QString> &dictionary);
     
-
 private slots:
     void performSearch(const QString &text);
     void performRandomSearch();
@@ -39,7 +37,6 @@ private:
     QDateEdit *startDateEdit;
     QDateEdit *endDateEdit;
     QComboBox *intervalComboBox;
-    QPushButton *downloadButton;
 };
 
 #endif // SEARCH_DIALOG_H
