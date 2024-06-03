@@ -4,7 +4,10 @@
 #include <QMainWindow>
 #include <QOpenGLWidget>
 #include <QBrush>
-#include "openglgraph.h"
+#include <QProgressBar>
+#include <QtNetwork/qnetworkaccessmanager.h>
+#include <QtNetwork/qnetworkreply.h>
+#include "graph/openglgraph.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +24,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void handleSelection(const QString &text);
 
 public slots:
     void on_importFileBtn_clicked();
@@ -28,10 +32,19 @@ public slots:
 
 private slots:
     void on_actionExit_triggered();
+    void onDownloadButtonClicked(const QString& ticker);
+    void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+    void onDownloadFinished();
 
 private:
     Ui::MainWindow *ui;
     OpenGLGraph *openGLGraph;
+    void loadJsonFile(const QString &filePath, QMap<QString, QString> &dictionary, QStringList &list);
+    QMap<QString, QString> dictionary;
+    QStringList dataList;
+    QProgressBar *progressBar;
+    QNetworkAccessManager *networkManager;
+    QNetworkReply *networkReply;
 };
 
 #endif // MAINWINDOW_H
