@@ -58,6 +58,16 @@ color: white;</string>
       </property>
      </widget>
     </item>
+    <item row="3" column="1">
+     <widget class="QCheckBox" name="rememberMeCheckBox">
+      <property name="styleSheet">
+       <string notr="true">color: white;</string>
+      </property>
+      <property name="text">
+       <string>Remember Me</string>
+      </property>
+     </widget>
+    </item>
     <item row="4" column="0" colspan="2">
      <widget class="QPushButton" name="loginBtn">
       <property name="minimumSize">
@@ -80,16 +90,6 @@ font-weight: 600;</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QCheckBox" name="rememberMeCheckBox">
-      <property name="styleSheet">
-       <string notr="true">color: white;</string>
-      </property>
-      <property name="text">
-       <string>Remember Me</string>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="1">
      <widget class="QLineEdit" name="usernameLineEdit">
       <property name="minimumSize">
@@ -107,6 +107,28 @@ color: white;</string>
       </property>
      </widget>
     </item>
+    <item row="5" column="0" colspan="2">
+     <widget class="QPushButton" name="createAccountBtn">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-style: solid;
+border-radius: 6px;
+background-color: #3E4257;
+font-weight: 600;</string>
+      </property>
+      <property name="text">
+       <string>Create an account</string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="0">
      <widget class="QLabel" name="usernameLabel">
       <property name="styleSheet">
@@ -116,21 +138,6 @@ color: white;</string>
       </property>
       <property name="text">
        <string>Username:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QLabel" name="titleLabel">
-      <property name="styleSheet">
-       <string notr="true">font-size: 24px;
-font-weight: bold;
-color: white;</string>
-      </property>
-      <property name="text">
-       <string>Login</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -146,29 +153,18 @@ color: white;</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0" colspan="2">
-     <widget class="QLabel" name="registerLabel">
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="titleLabel">
+      <property name="styleSheet">
+       <string notr="true">font-size: 24px;
+font-weight: bold;
+color: white;</string>
+      </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;#&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#e75151;&quot;&gt;Create an account&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>Login</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
-      </property>
-      <property name="openExternalLinks">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" colspan="2">
-     <widget class="QLabel" name="forgotPasswordLabel">
-      <property name="text">
-       <string>&lt;a href=&quot;#&quot; style=&quot;color: #E75151;&quot;&gt;Forgot Password?&lt;/a&gt;</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="openExternalLinks">
-       <bool>true</bool>
       </property>
      </widget>
     </item>

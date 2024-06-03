@@ -2,11 +2,13 @@
 #include "ui_loginwindow.h"
 #include "mainwindow.h"
 #include <QMessageBox>
+#include "HttpClient.h"
 
 LoginWindow::LoginWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::LoginWindow),
-    httpClient(new HttpClient(this))
+    httpClient(new HttpClient(this)),
+    registerWindow(nullptr)
 {
     ui->setupUi(this);
 
@@ -18,6 +20,9 @@ LoginWindow::LoginWindow(QWidget *parent) :
     connect(httpClient, &HttpClient::loginFailure, this, [](const QString &message) {
         QMessageBox::critical(nullptr, "Login Error", "Login failed: " + message);
     });
+
+    connect(ui->createAccountBtn, &QPushButton::clicked, this, &LoginWindow::on_registerBtn_clicked);
+
 }
 
 LoginWindow::~LoginWindow()
@@ -32,8 +37,8 @@ void LoginWindow::on_loginBtn_clicked()
     httpClient->loginUser(username, password);
 }
 
-void LoginWindow::on_registerLabel_linkActivated(const QString &link)
+void LoginWindow::on_registerBtn_clicked()
 {
-    // Здесь можно добавить код для открытия окна регистрации
-    QMessageBox::information(this, "Register", "Registration link clicked!");
+    RegisterWindow *registerWindow = new RegisterWindow();
+    registerWindow->show();
 }

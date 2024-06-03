@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "HttpClient.h"
+#include "registerwindow.h"
 
 namespace Ui {
 class LoginWindow;
@@ -18,11 +19,13 @@ public:
 
 private slots:
     void on_loginBtn_clicked();
-    void on_registerLabel_linkActivated(const QString &link);
+    void on_registerBtn_clicked();
+
 
 private:
     Ui::LoginWindow *ui;
     HttpClient *httpClient;
+    RegisterWindow *registerWindow;
 };
 
 #endif // LOGINWINDOW_H
