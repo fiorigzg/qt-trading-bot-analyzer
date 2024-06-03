@@ -1,5 +1,9 @@
+.vscode
 build
 *.user
 CMakeLists.txt.*
 *.idea
 .DB_Store
+venv
+
+
