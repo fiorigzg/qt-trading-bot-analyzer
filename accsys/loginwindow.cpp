@@ -39,6 +39,11 @@ void LoginWindow::on_loginBtn_clicked()
 
 void LoginWindow::on_registerBtn_clicked()
 {
-    RegisterWindow *registerWindow = new RegisterWindow();
+    if (!registerWindow) {
+        registerWindow = new RegisterWindow(this);
+        connect(registerWindow, &RegisterWindow::destroyed, this, [this]() {
+            registerWindow = nullptr;
+        });
+    }
     registerWindow->show();
 }

@@ -18,6 +18,7 @@ public:
 
 private slots:
     void on_registerButton_clicked();
+    void on_backButton_clicked();
 
 private:
     Ui::RegisterWindow *ui;
