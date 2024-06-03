@@ -14,7 +14,12 @@
 #include <QDate>
 #include <QPushButton>
 #include <QLabel>
-#include <QDebug>
+#include <QFileDialog>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
+#include <QProgressBar>
+#include <QMap>
 
 QString filename(const QString &path) {
     int lastSlashIndex = -1;
@@ -41,6 +46,10 @@ QString toTimestamp(QDateEdit *dateEdit) {
     QString timestampStr = QString::number(unixTimestamp);
 
     return timestampStr;
+}
+
+QString ConstructYahoo(const QString& ticker, const QString& startDate, const QString& endDate, const QString& interval) {
+    return "https://query1.finance.yahoo.com/v7/finance/download/{stock}?period1={day_begin}&period2={day_end}&interval={interval}&events=history&crumb={crumb}";
 }
 
 QString SearchDialog::getSelectedItem() const
@@ -81,6 +90,10 @@ SearchDialog::SearchDialog(QWidget *parent)
     intervalComboBox->addItem("1 week", "1w");
     intervalComboBox->addItem("1 month", "1m");
 
+    progressBar = new QProgressBar(this);
+    progressBar->setRange(0, 100);
+    progressBar->setValue(0);
+    
     layout->addWidget(new QLabel("start date:"));
     layout->addWidget(startDateEdit);
     layout->addWidget(new QLabel("end date:"));
@@ -88,6 +101,14 @@ SearchDialog::SearchDialog(QWidget *parent)
     layout->addWidget(new QLabel("candle interval:"));
     layout->addWidget(intervalComboBox);
 
+    
+
+    // Add the download button
+    downloadButton = new QPushButton("Download Data", this);
+    layout->addWidget(downloadButton);
+    layout->addWidget(progressBar);
+
+    connect(downloadButton, &QPushButton::clicked, this, &SearchDialog::onDownloadButtonClicked);
     connect(startDateEdit, &QDateEdit::dateChanged, this, &SearchDialog::validateInputs);
     connect(endDateEdit, &QDateEdit::dateChanged, this, &SearchDialog::validateInputs);
     connect(intervalComboBox, &QComboBox::currentIndexChanged, this, &SearchDialog::validateInputs);
@@ -99,11 +120,11 @@ SearchDialog::SearchDialog(QWidget *parent)
         int y = parentGeometry.center().y() - (height() / 2);
         move(x, y);
     }
-
+    downloadButton->setEnabled(false);
     performRandomSearch();
 }
 
-void SearchDialog::loadSearch(const QString &filePath, QMap<QString, QString> &dictionary) {
+void SearchDialog::loadSearch(const QString &filePath) {
     QFile file1(".." + filePath);
     QByteArray jsonData;
     if (!file1.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -161,7 +182,7 @@ void SearchDialog::performSearch(const QString &text) {
 
 void SearchDialog::itemSelected(const QModelIndex &index) {
     selectedItem = model->data(index, Qt::DisplayRole).toString();
-    accept();
+    validateInputs();
 }
 
 QDate SearchDialog::getStartDate() const {
@@ -180,9 +201,56 @@ void SearchDialog::validateInputs() {
     bool isValid = !selectedItem.isEmpty() &&
                    startDateEdit->date() < endDateEdit->date() &&
                    !intervalComboBox->currentText().isEmpty();
+    downloadButton->setEnabled(isValid);
 }
 
+void SearchDialog::onDownloadButtonClicked() {
+    QString company = getSelectedItem();
+    QString startDate = toTimestamp(startDateEdit);
+    QString endDate = toTimestamp(endDateEdit);
+    QString interval = getInterval();
 
+    // Construct URL (replace with actual URL construction logic)
+    QString url = ConstructYahoo(company, startDate, endDate, interval);
+
+    QNetworkRequest request{QUrl(url)};
+    networkReply = networkManager->get(request);
+
+    // Connect signals for progress and completion
+    connect(networkReply, &QNetworkReply::downloadProgress, this, &SearchDialog::onDownloadProgress);
+    connect(networkReply, &QNetworkReply::finished, this, &SearchDialog::onDownloadFinished);
+}
+
+void SearchDialog::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal) {
+    if (bytesTotal > 0) {
+        progressBar->setValue(static_cast<int>((bytesReceived * 100) / bytesTotal));
+    }
+}
+
+void SearchDialog::onDownloadFinished() {
+    if (networkReply->error() == QNetworkReply::NoError) {
+        QByteArray data = networkReply->readAll();
+
+        // Save the downloaded data to a file
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save CSV File"), "", tr("CSV Files (*.csv);;All Files (*)"));
+        if (!fileName.isEmpty()) {
+            QFile file(fileName);
+            if (file.open(QIODevice::WriteOnly)) {
+                file.write(data);
+                file.close();
+                QMessageBox::information(this, tr("Download Complete"), tr("The file has been downloaded successfully."));
+            } else {
+                QMessageBox::warning(this, tr("File Error"), tr("Unable to save the file."));
+            }
+        }
+    } else {
+        QMessageBox::warning(this, tr("Download Error"), tr("Failed to download the file."));
+    }
+
+    networkReply->deleteLater();
+    networkReply = nullptr;
+    progressBar->setValue(0);
+}
 
 // void MainWindow::onDownloadButtonClicked() {
 //     // QString url = constructYahooFinanceUrl(ticker, startDate, endDate, interval);

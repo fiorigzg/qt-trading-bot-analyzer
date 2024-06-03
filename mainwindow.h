@@ -37,9 +37,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     OpenGLGraph *openGLGraph;
-    void loadJsonFile(const QString &filePath, QMap<QString, QString> &dictionary, QStringList &list);
-    QMap<QString, QString> dictionary;
-    QStringList dataList;
+    void loadJsonFile(const QString &filePath);
     QProgressBar *progressBar;
     QNetworkAccessManager *networkManager;
     QNetworkReply *networkReply;

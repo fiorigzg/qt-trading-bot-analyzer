@@ -10,6 +10,11 @@
 #include <QDateEdit>
 #include <QComboBox>
 #include <QDialog>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QMap>
 
 class SearchDialog : public QDialog {
     Q_OBJECT
@@ -20,13 +25,16 @@ public:
     QDate getStartDate() const;
     QDate getEndDate() const;
     QString getInterval() const;
-    void loadSearch(const QString &filePath, QMap<QString, QString> &dictionary);
+    void loadSearch(const QString &filePath);
     
 private slots:
     void performSearch(const QString &text);
     void performRandomSearch();
     void itemSelected(const QModelIndex &index);
     void validateInputs();
+    void onDownloadButtonClicked();
+    void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+    void onDownloadFinished();
 
 private:
     QLineEdit *searchEdit;
@@ -34,9 +42,14 @@ private:
     QStringListModel *model;
     QStringList dataList;
     QString selectedItem;
+    QMap<QString, QString> dictionary;
     QDateEdit *startDateEdit;
     QDateEdit *endDateEdit;
     QComboBox *intervalComboBox;
+    QProgressBar *progressBar;
+    QNetworkAccessManager *networkManager;
+    QNetworkReply *networkReply;
+    QPushButton *downloadButton;
 };
 
 #endif // SEARCH_DIALOG_H

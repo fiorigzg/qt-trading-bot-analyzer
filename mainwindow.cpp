@@ -10,7 +10,6 @@
 #include <QString>
 #include <qstringlist.h>
 #include <QFile>
-#include <QMap>
 #include <QDate>
 #include <QTextStream>
 #include <QMessageBox>
@@ -72,7 +71,7 @@ void MainWindow::on_importFileBtn_clicked()
     {
         SearchDialog stockSearch = SearchDialog(this);
         QString filePath = "/search/ticker.json";
-        stockSearch.loadSearch(filePath, dictionary);
+        stockSearch.loadSearch(filePath);
         stockSearch.exec();
     }
 }
@@ -81,4 +80,3 @@ void MainWindow::on_runBtn_clicked()
 {
     openGLGraph->switchTimer();
 }
-
