@@ -33,9 +33,6 @@ public slots:
 
 private slots:
     void on_actionExit_triggered();
-    void onDownloadButtonClicked();
-    void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-    void onDownloadFinished();
 
 private:
     Ui::MainWindow *ui;
