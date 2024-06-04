@@ -48,8 +48,12 @@ QString toTimestamp(QDateEdit *dateEdit) {
     return timestampStr;
 }
 
-QString ConstructYahoo(const QString& ticker, const QString& startDate, const QString& endDate, const QString& interval) {
-    return "https://query1.finance.yahoo.com/v7/finance/download/{stock}?period1={day_begin}&period2={day_end}&interval={interval}&events=history&crumb={crumb}";
+QString ConstructYahooURL(const QString& ticker, const QString& startDate, const QString& endDate, const QString& interval) {
+    return "https://query1.finance.yahoo.com/v7/finance/download/" + ticker +
+    "?period1=" + startDate +
+    "&period2=" + endDate +
+    "&interval=" + interval +
+    "&events=history";
 }
 
 QString SearchDialog::getSelectedItem() const
@@ -100,9 +104,7 @@ SearchDialog::SearchDialog(QWidget *parent)
     layout->addWidget(endDateEdit);
     layout->addWidget(new QLabel("candle interval:"));
     layout->addWidget(intervalComboBox);
-
     
-
     // Add the download button
     downloadButton = new QPushButton("Download Data", this);
     layout->addWidget(downloadButton);
@@ -121,6 +123,7 @@ SearchDialog::SearchDialog(QWidget *parent)
         move(x, y);
     }
     downloadButton->setEnabled(false);
+    networkManager = new QNetworkAccessManager();
     performRandomSearch();
 }
 
@@ -205,15 +208,30 @@ void SearchDialog::validateInputs() {
 }
 
 void SearchDialog::onDownloadButtonClicked() {
-    QString company = getSelectedItem();
+    QString company = dictionary[getSelectedItem()];
     QString startDate = toTimestamp(startDateEdit);
     QString endDate = toTimestamp(endDateEdit);
     QString interval = getInterval();
 
     // Construct URL (replace with actual URL construction logic)
-    QString url = ConstructYahoo(company, startDate, endDate, interval);
+    QString url = ConstructYahooURL(company, startDate, endDate, interval);
+    
+    QObject::connect(networkManager, &QNetworkAccessManager::finished,
+        this, 
+        [=](QNetworkReply *reply)
+        {
+            if (reply->error()) {
+                qDebug() << reply->errorString();
+                return;
+            }
+            QString answer = reply->readAll();
+            qDebug() << answer;
+        }
+    );
 
-    QNetworkRequest request{QUrl(url)};
+    QNetworkRequest request;
+    // QNetworkRequest request{QUrl(url)};
+    request.setUrl(QUrl(url));
     networkReply = networkManager->get(request);
 
     // Connect signals for progress and completion
@@ -246,52 +264,8 @@ void SearchDialog::onDownloadFinished() {
     } else {
         QMessageBox::warning(this, tr("Download Error"), tr("Failed to download the file."));
     }
-
     networkReply->deleteLater();
     networkReply = nullptr;
     progressBar->setValue(0);
+    accept();
 }
-
-// void MainWindow::onDownloadButtonClicked() {
-//     // QString url = constructYahooFinanceUrl(ticker, startDate, endDate, interval);
-//     // QNetworkRequest request{QUrl(url)}; 
-
-//     // networkReply = networkManager->get(request);
-
-//     // // Connect signals for progress and completion
-//     // connect(networkReply, &QNetworkReply::downloadProgress, this, &MainWindow::onDownloadProgress);
-//     // connect(networkReply, &QNetworkReply::finished, this, &MainWindow::onDownloadFinished);
-// }
-
-// void MainWindow::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
-// {
-//     if (bytesTotal > 0) {
-//         progressBar->setValue(static_cast<int>((bytesReceived * 100) / bytesTotal));
-//     }
-// }
-
-// void MainWindow::onDownloadFinished()
-// {
-//     if (networkReply->error() == QNetworkReply::NoError) {
-//         QByteArray data = networkReply->readAll();
-
-//         // Save the downloaded data to a file
-//         QString fileName = QFileDialog::getSaveFileName(this, tr("Save CSV File"), "", tr("CSV Files (*.csv);;All Files (*)"));
-//         if (!fileName.isEmpty()) {
-//             QFile file(fileName);
-//             if (file.open(QIODevice::WriteOnly)) {
-//                 file.write(data);
-//                 file.close();
-//                 QMessageBox::information(this, tr("Download Complete"), tr("The file has been downloaded successfully."));
-//             } else {
-//                 QMessageBox::warning(this, tr("File Error"), tr("Unable to save the file."));
-//             }
-//         }
-//     } else {
-//         QMessageBox::warning(this, tr("Download Error"), tr("Failed to download the file."));
-//     }
-
-//     networkReply->deleteLater();
-//     networkReply = nullptr;
-//     progressBar->setValue(0);
-// }
