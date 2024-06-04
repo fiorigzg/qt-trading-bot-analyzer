@@ -15,6 +15,14 @@
 #include <QMessageBox>
 #include <QDebug>
 
+QString stpBck(const QString &s) {
+    int lastSlashIndex = s.lastIndexOf('/', s.length() - 2); // Find the last slash, ignoring the trailing slash
+    if (lastSlashIndex != -1) {
+        return s.left(lastSlashIndex + 1); // Include the slash at the end of the result
+    }
+    return s; // Return the original string if no slash
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -29,6 +37,12 @@ MainWindow::MainWindow(QWidget *parent)
     openGLLayout->addWidget(openGLGraph);
     openGLBox->setLayout(openGLLayout);
     openGLGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    QDir cacheDir(stpBck(QCoreApplication::applicationDirPath()) + "cache/");
+    QFileInfoList fileList = cacheDir.entryInfoList(QDir::Files);
+    for (const QFileInfo &fileInfo : fileList) {        
+        PathToCsv = fileInfo.absoluteFilePath();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -70,13 +84,18 @@ void MainWindow::on_importFileBtn_clicked()
     else if (selector.response() == 2)
     {
         SearchDialog stockSearch = SearchDialog(this);
-        QString filePath = "/search/ticker.json";
+        QString filePath = "search/ticker.json";
         stockSearch.loadSearch(filePath);
         stockSearch.exec();
+        PathToCsv = stockSearch.getPathToCsv();
     }
 }
 
 void MainWindow::on_runBtn_clicked()
 {
+    qWarning() << PathToCsv; // путь к файлу для построения графика
+    // в папке cache всегда лежит один цсв файл, при скачке он удаляется и
+    // скачивается новый, его пушьте прям на гитхаб он нихуя не весит
+    // Path to Csv тож обновляеостся после каждой скачки
     openGLGraph->switchTimer();
 }

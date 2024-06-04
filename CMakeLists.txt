@@ -70,11 +70,10 @@ endif()
 
 add_custom_command(
     TARGET qt-trading-bot-analyzer POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     ${JSON_FILE_PATH}
     ${JSON_FILE_DESTINATION}
 )
-
 
 target_link_libraries(qt-trading-bot-analyzer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
 target_link_libraries(qt-trading-bot-analyzer PRIVATE Qt6::OpenGLWidgets)

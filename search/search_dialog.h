@@ -25,6 +25,7 @@ public:
     QDate getStartDate() const;
     QDate getEndDate() const;
     QString getInterval() const;
+    QString getPathToCsv() const;
     void loadSearch(const QString &filePath);
     
 private slots:
@@ -35,6 +36,7 @@ private slots:
     void onDownloadButtonClicked();
     void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
     void onDownloadFinished();
+
 
 private:
     QLineEdit *searchEdit;

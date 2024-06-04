@@ -41,6 +41,7 @@ private:
     QProgressBar *progressBar;
     QNetworkAccessManager *networkManager;
     QNetworkReply *networkReply;
+    QString PathToCsv;
 };
 
 #endif // MAINWINDOW_H
