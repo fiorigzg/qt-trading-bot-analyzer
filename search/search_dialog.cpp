@@ -21,6 +21,14 @@
 #include <QProgressBar>
 #include <QMap>
 
+QString stepBack(const QString &s) {
+    int lastSlashIndex = s.lastIndexOf('/', s.length() - 2); // Find the last slash, ignoring the trailing slash
+    if (lastSlashIndex != -1) {
+        return s.left(lastSlashIndex + 1); // Include the slash at the end of the result
+    }
+    return s; // Return the original string if no slash
+}
+
 QString filename(const QString &path) {
     int lastSlashIndex = -1;
     for (int i = 0; i < path.length(); ++i) {
@@ -217,18 +225,14 @@ void SearchDialog::onDownloadButtonClicked() {
     QString url = ConstructYahooURL(company, startDate, endDate, interval);
     
     QObject::connect(networkManager, &QNetworkAccessManager::finished,
-        this, 
-        [=](QNetworkReply *reply)
-        {
+        this, [=](QNetworkReply *reply) {
             if (reply->error()) {
                 qDebug() << reply->errorString();
                 return;
             }
             QString answer = reply->readAll();
-            qDebug() << answer;
         }
     );
-
     QNetworkRequest request;
     // QNetworkRequest request{QUrl(url)};
     request.setUrl(QUrl(url));
@@ -248,7 +252,7 @@ void SearchDialog::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal) {
 void SearchDialog::onDownloadFinished() {
     if (networkReply->error() == QNetworkReply::NoError) {
         QByteArray data = networkReply->readAll();
-
+        qDebug() << data;
         // Save the downloaded data to a file
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save CSV File"), "", tr("CSV Files (*.csv);;All Files (*)"));
         if (!fileName.isEmpty()) {
@@ -269,3 +273,24 @@ void SearchDialog::onDownloadFinished() {
     progressBar->setValue(0);
     accept();
 }
+
+// void SearchDialog::onDownloadFinished() {
+//     if (networkReply->error() == QNetworkReply::NoError) {
+//         QByteArray data = networkReply->readAll();
+//         QString absolutePath = stepBack(QCoreApplication::applicationDirPath()) + "cache/" + dictionary[getSelectedItem()] + ".csv";
+//         QFile file1(absolutePath);
+//         if (!file1.open(QIODevice::WriteOnly)) {
+//             file1.close();
+//         } else {
+//             file1.write(data);
+//             file1.close();
+//             QMessageBox::information(this, tr("Download Complete"), tr("The file has been downloaded successfully."));
+//         }
+//     } else {
+//         QMessageBox::warning(this, tr("Download Error"), tr("Failed to download the file."));
+//     }
+//     networkReply->deleteLater();
+//     networkReply = nullptr;
+//     progressBar->setValue(0);
+//     accept();
+// }
