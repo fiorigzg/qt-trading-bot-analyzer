@@ -70,7 +70,7 @@ endif()
 
 add_custom_command(
     TARGET qt-trading-bot-analyzer POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     ${JSON_FILE_PATH}
     ${JSON_FILE_DESTINATION}
 )

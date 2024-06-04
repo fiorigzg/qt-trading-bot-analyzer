@@ -20,6 +20,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QProgressBar>
 #include <QMap>
+#include <QDir>
 
 QString stepBack(const QString &s) {
     int lastSlashIndex = s.lastIndexOf('/', s.length() - 2); // Find the last slash, ignoring the trailing slash
@@ -28,6 +29,25 @@ QString stepBack(const QString &s) {
     }
     return s; // Return the original string if no slash
 }
+
+void clearCache(QString path)
+{
+    QDir cacheDir(path);
+    if (!cacheDir.exists()) {
+        qDebug() << "Directory does not exist:" << path;
+        return;
+    }
+    QFileInfoList fileList = cacheDir.entryInfoList(QDir::Files);
+    
+    for (const QFileInfo &fileInfo : fileList) {
+        QFile file(fileInfo.absoluteFilePath());
+        if (file.remove()) {
+            qDebug() << "Removed file:" << fileInfo.fileName();
+        } else {
+            qDebug() << "Failed to remove file:" << fileInfo.fileName();
+        }
+    }
+} 
 
 QString filename(const QString &path) {
     int lastSlashIndex = -1;
@@ -136,17 +156,23 @@ SearchDialog::SearchDialog(QWidget *parent)
 }
 
 void SearchDialog::loadSearch(const QString &filePath) {
-    QFile file1(".." + filePath);
+    QFile file1("../" + filePath);
     QByteArray jsonData;
     if (!file1.open(QIODevice::ReadOnly | QIODevice::Text)) {
         file1.close();
         QFile file2(QCoreApplication::applicationDirPath() + filename(filePath));
         if (!file2.open(QIODevice::ReadOnly | QIODevice::Text)) {
             file2.close();
-            QFile file3("/ticker.json");
+            QFile file3("./ticker.json");
             if (!file3.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                qWarning("There's an error with loading search system");
-                return;
+                file3.close();
+                QFile file4(stepBack(QCoreApplication::applicationDirPath()) + filePath);
+                if (!file4.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                    qWarning("There's an error with loading search system");
+                    return;
+                } else {
+                    jsonData = file4.readAll();
+                }
             } else {
                 jsonData = file3.readAll();
             }
@@ -230,14 +256,12 @@ void SearchDialog::onDownloadButtonClicked() {
                 qDebug() << reply->errorString();
                 return;
             }
-            QString answer = reply->readAll();
         }
     );
     QNetworkRequest request;
     // QNetworkRequest request{QUrl(url)};
     request.setUrl(QUrl(url));
     networkReply = networkManager->get(request);
-
     // Connect signals for progress and completion
     connect(networkReply, &QNetworkReply::downloadProgress, this, &SearchDialog::onDownloadProgress);
     connect(networkReply, &QNetworkReply::finished, this, &SearchDialog::onDownloadFinished);
@@ -252,11 +276,12 @@ void SearchDialog::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal) {
 void SearchDialog::onDownloadFinished() {
     if (networkReply->error() == QNetworkReply::NoError) {
         QByteArray data = networkReply->readAll();
-        qDebug() << data;
         // Save the downloaded data to a file
-        QString fileName = QFileDialog::getSaveFileName(this, tr("Save CSV File"), "", tr("CSV Files (*.csv);;All Files (*)"));
-        if (!fileName.isEmpty()) {
-            QFile file(fileName);
+        QString CachePath = stepBack(QCoreApplication::applicationDirPath()) + "cache/";
+        QString CsvPath = CachePath + dictionary[getSelectedItem()] + ".csv";
+        QFile file(CsvPath);
+        if (!data.isEmpty()) {
+            clearCache(CachePath);
             if (file.open(QIODevice::WriteOnly)) {
                 file.write(data);
                 file.close();
@@ -264,6 +289,8 @@ void SearchDialog::onDownloadFinished() {
             } else {
                 QMessageBox::warning(this, tr("File Error"), tr("Unable to save the file."));
             }
+        } else {
+            QMessageBox::warning(this, tr("The data is empty"), tr("Unable to download"));
         }
     } else {
         QMessageBox::warning(this, tr("Download Error"), tr("Failed to download the file."));
@@ -274,23 +301,6 @@ void SearchDialog::onDownloadFinished() {
     accept();
 }
 
-// void SearchDialog::onDownloadFinished() {
-//     if (networkReply->error() == QNetworkReply::NoError) {
-//         QByteArray data = networkReply->readAll();
-//         QString absolutePath = stepBack(QCoreApplication::applicationDirPath()) + "cache/" + dictionary[getSelectedItem()] + ".csv";
-//         QFile file1(absolutePath);
-//         if (!file1.open(QIODevice::WriteOnly)) {
-//             file1.close();
-//         } else {
-//             file1.write(data);
-//             file1.close();
-//             QMessageBox::information(this, tr("Download Complete"), tr("The file has been downloaded successfully."));
-//         }
-//     } else {
-//         QMessageBox::warning(this, tr("Download Error"), tr("Failed to download the file."));
-//     }
-//     networkReply->deleteLater();
-//     networkReply = nullptr;
-//     progressBar->setValue(0);
-//     accept();
-// }
+QString SearchDialog::getPathToCsv() const {
+    return stepBack(QCoreApplication::applicationDirPath()) + "cache/" + dictionary[getSelectedItem()] + ".csv";
+}
