@@ -30,7 +30,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
 
         search/ticker.json
-        ticker.json
 
         mainwindow.h
         mainwindow.cpp

@@ -15,12 +15,13 @@
 #include <QProgressBar>
 #include <QPushButton>
 #include <QMap>
+#include "../graph/openglgraph.h"
 
 class SearchDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit SearchDialog(QWidget *parent = nullptr);
+    SearchDialog(QWidget *parent = nullptr, OpenGLGraph *openGLGraph = nullptr);
     QString getSelectedItem() const;
     QDate getStartDate() const;
     QDate getEndDate() const;
@@ -39,6 +40,7 @@ private slots:
 
 
 private:
+    OpenGLGraph *openGLGraph;
     QLineEdit *searchEdit;
     QListView *resultView;
     QStringListModel *model;
@@ -52,6 +54,9 @@ private:
     QNetworkAccessManager *networkManager;
     QNetworkReply *networkReply;
     QPushButton *downloadButton;
+    QLabel *startDateLabel;
+    QLabel *endDateLabel;
+    QLabel *intervalLabel;
 };
 
 #endif // SEARCH_DIALOG_H

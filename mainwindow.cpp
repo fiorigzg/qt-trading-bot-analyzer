@@ -83,7 +83,7 @@ void MainWindow::on_importFileBtn_clicked()
     }
     else if (selector.response() == 2)
     {
-        SearchDialog stockSearch = SearchDialog(this);
+        SearchDialog stockSearch = SearchDialog(this, openGLGraph);
         QString filePath = "search/ticker.json";
         stockSearch.loadSearch(filePath);
         stockSearch.exec();

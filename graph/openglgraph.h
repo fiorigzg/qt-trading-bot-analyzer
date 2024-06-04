@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <string>
 
 class OpenGLGraph : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -17,11 +18,13 @@ class OpenGLGraph : public QOpenGLWidget, protected QOpenGLFunctions
 public:
     OpenGLGraph(QWidget *parent = nullptr, QLabel *portfolio = nullptr);
     void switchTimer();
+    void generatePrices(std::string);
 
 protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
     void paintGL() override;
+    void wheelEvent(QWheelEvent *event) override;
 
 private:
     void tickTimer();
@@ -31,6 +34,8 @@ private:
     size_t currentCandle = 0;
     size_t maxCandle;
     float maxPrice;
+    float minPrice;
+    float candleWidth = 0.07;
     Portfolio portfolioSum = Portfolio(1000.0, 0.0);
     bool timerStarted = false;
 

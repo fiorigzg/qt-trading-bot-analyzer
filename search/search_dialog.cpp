@@ -1,4 +1,5 @@
 #include "search_dialog.h"
+#include "../graph/openglgraph.h"
 #include <QVBoxLayout>
 #include <QFile>
 #include <QJsonDocument>
@@ -40,6 +41,9 @@ void clearCache(QString path)
     QFileInfoList fileList = cacheDir.entryInfoList(QDir::Files);
     
     for (const QFileInfo &fileInfo : fileList) {
+        if (fileInfo.fileName() == "main.csv") {
+            continue;
+        }
         QFile file(fileInfo.absoluteFilePath());
         if (file.remove()) {
             qDebug() << "Removed file:" << fileInfo.fileName();
@@ -89,14 +93,20 @@ QString SearchDialog::getSelectedItem() const
     return this->selectedItem;
 }
 
-SearchDialog::SearchDialog(QWidget *parent)
-    : QDialog(parent), selectedItem("") {
+SearchDialog::SearchDialog(QWidget *parent, OpenGLGraph *openGLGraph)
+    : QDialog(parent), openGLGraph(openGLGraph), selectedItem("") {
     setWindowTitle("Search");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     searchEdit = new QLineEdit(this);
+    searchEdit->setStyleSheet("border-style: solid; border-radius: 6px; background-color: #1D2033; font-weight: 600; padding: 10px;");
+    searchEdit->setPlaceholderText("Search for a company");
+    searchEdit->setFixedHeight(40);
     resultView = new QListView(this);
+    resultView->setStyleSheet("border-style: solid; border-radius: 6px; background-color: #1D2033; font-weight: 600; padding: 10px; margin-top: 3px;");
+    resultView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    resultView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     model = new QStringListModel(this);
 
     resultView->setModel(model);
@@ -108,33 +118,53 @@ SearchDialog::SearchDialog(QWidget *parent)
     connect(resultView, &QListView::clicked, this, &SearchDialog::itemSelected);
 
     startDateEdit = new QDateEdit(QDate::currentDate().addYears(-1), this);
+    startDateEdit->setStyleSheet("border-style: solid; background-color: #1D2033; font-weight: 600; padding-left: 10px; border-radius: 6px;");
+    startDateEdit->setFixedHeight(30);
     startDateEdit->setCalendarPopup(true);
     startDateEdit->setMinimumDate(QDate(1990, 1, 1));
     startDateEdit->setMaximumDate(QDate::currentDate());
 
     endDateEdit = new QDateEdit(QDate::currentDate(), this);
+    endDateEdit->setStyleSheet("border-style: solid; background-color: #1D2033; font-weight: 600; padding-left: 10px; border-radius: 6px;");
+    endDateEdit->setFixedHeight(30);
     endDateEdit->setCalendarPopup(true);
     endDateEdit->setMinimumDate(QDate(1990, 1, 1));
     endDateEdit->setMaximumDate(QDate::currentDate());
 
     intervalComboBox = new QComboBox(this);
+    intervalComboBox->setStyleSheet("border-style: solid; background-color: #1D2033; font-weight: 600; padding-left: 10px; border-radius: 6px;");
+    intervalComboBox->setFixedHeight(30);
     intervalComboBox->addItem("1 day", "1d");
     intervalComboBox->addItem("1 week", "1w");
     intervalComboBox->addItem("1 month", "1m");
+    intervalComboBox->setCursor(Qt::PointingHandCursor);
 
     progressBar = new QProgressBar(this);
     progressBar->setRange(0, 100);
     progressBar->setValue(0);
     
-    layout->addWidget(new QLabel("start date:"));
+    startDateLabel = new QLabel("Start date");
+    startDateLabel->setStyleSheet("font-weight: 600; margin-top: 10px;");
+    startDateLabel->setFixedHeight(20);
+    endDateLabel = new QLabel("End date");
+    endDateLabel->setStyleSheet("font-weight: 600; margin-top: 5px;");
+    endDateLabel->setFixedHeight(20);
+    intervalLabel = new QLabel("Candle interval");
+    intervalLabel->setStyleSheet("font-weight: 600; margin-top: 5px;");
+    intervalLabel->setFixedHeight(20);
+
+    layout->addWidget(startDateLabel);
     layout->addWidget(startDateEdit);
-    layout->addWidget(new QLabel("end date:"));
+    layout->addWidget(endDateLabel);
     layout->addWidget(endDateEdit);
-    layout->addWidget(new QLabel("candle interval:"));
+    layout->addWidget(intervalLabel);
     layout->addWidget(intervalComboBox);
     
     // Add the download button
     downloadButton = new QPushButton("Download Data", this);
+    downloadButton->setStyleSheet("border-style: solid; border-radius: 6px; background-color: #3E4257; font-weight: 600; margin-top: 10px; ");
+    downloadButton->setFixedHeight(60);
+    downloadButton->setCursor(Qt::PointingHandCursor);
     layout->addWidget(downloadButton);
     layout->addWidget(progressBar);
 
@@ -298,6 +328,7 @@ void SearchDialog::onDownloadFinished() {
     networkReply->deleteLater();
     networkReply = nullptr;
     progressBar->setValue(0);
+    openGLGraph->generatePrices(getPathToCsv().toStdString());
     accept();
 }
 
