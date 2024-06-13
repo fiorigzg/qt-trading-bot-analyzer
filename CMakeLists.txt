@@ -9,7 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_VERSION_MAJOR 6)
-
+set(JSON_FILE_PATH "${CMAKE_SOURCE_DIR}/search/ticker.json")
+set(JSON_FILE_DESTINATION "${CMAKE_BINARY_DIR}/ticker.json")
 
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets)
 find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
@@ -28,6 +29,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 
+        search/ticker.json
+
         mainwindow.h
         mainwindow.cpp
         mainwindow.ui
@@ -42,7 +45,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         search/choice_dialog.h
         search/search_dialog.h
         search/search_dialog.cpp
-        search/ticker.json
 
         accsys/registerwindow.ui
         accsys/registerwindow.h
@@ -64,6 +66,13 @@ else()
         )
     endif()
 endif()
+
+add_custom_command(
+    TARGET qt-trading-bot-analyzer POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${JSON_FILE_PATH}
+    ${JSON_FILE_DESTINATION}
+)
 
 target_link_libraries(qt-trading-bot-analyzer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
 target_link_libraries(qt-trading-bot-analyzer PRIVATE Qt6::OpenGLWidgets)

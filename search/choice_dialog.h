@@ -19,7 +19,14 @@ public:
         QVBoxLayout *layout = new QVBoxLayout(this);
 
         QPushButton *button1 = new QPushButton("Import .csv", this);
+        button1->setStyleSheet("border-style: solid; border-radius: 6px; background-color: #3E4257; font-weight: 600;");
+        button1->setFixedHeight(40);
+        button1->setCursor(Qt::PointingHandCursor);
         QPushButton *button2 = new QPushButton("Search for stock market share (Recommended)", this);
+        button2->setStyleSheet("border-style: solid; border-radius: 6px; background-color: #3E4257; font-weight: 600; margin-top: 3px;");
+        button2->setFixedHeight(40);
+        button2->setMinimumWidth(400);
+        button2->setCursor(Qt::PointingHandCursor);
 
         layout->addWidget(button1);
         layout->addWidget(button2);

@@ -5,6 +5,7 @@
 #include <QOpenGLWidget>
 #include <QBrush>
 #include <QProgressBar>
+#include <QDate>
 #include <QtNetwork/qnetworkaccessmanager.h>
 #include <QtNetwork/qnetworkreply.h>
 #include "graph/openglgraph.h"
@@ -32,19 +33,15 @@ public slots:
 
 private slots:
     void on_actionExit_triggered();
-    void onDownloadButtonClicked(const QString& ticker);
-    void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-    void onDownloadFinished();
 
 private:
     Ui::MainWindow *ui;
     OpenGLGraph *openGLGraph;
-    void loadJsonFile(const QString &filePath, QMap<QString, QString> &dictionary, QStringList &list);
-    QMap<QString, QString> dictionary;
-    QStringList dataList;
+    void loadJsonFile(const QString &filePath);
     QProgressBar *progressBar;
     QNetworkAccessManager *networkManager;
     QNetworkReply *networkReply;
+    QString PathToCsv;
 };
 
 #endif // MAINWINDOW_H

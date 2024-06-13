@@ -6,33 +6,20 @@
 #include <QTextStream>
 #include <QLabel>
 #include <QString>
+#include <QWheelEvent>
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <sstream>
+#include <map>
 
 
 OpenGLGraph::OpenGLGraph(QWidget *parent, QLabel *portfolio)
     : QOpenGLWidget(parent), portfolio(portfolio)
 {
-}
-
-void OpenGLGraph::initializeGL()
-{
-    // Open gl
-    initializeOpenGLFunctions();
-    glClearColor(0.11, 0.13, 0.20, 1.0);
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&OpenGLGraph::tickTimer));
-
-    // Prices generation
-    PricesRes pricesRes = generatePrices();
-    prices = pricesRes.prices;
-    maxCandle = pricesRes.maxCandle;
-    maxPrice = pricesRes.maxPrice;
-}
-
-void OpenGLGraph::resizeGL(int w, int h)
-{
-    glViewport(0, 0, w, h); // Set the viewport to cover the entire widget
 }
 
 void OpenGLGraph::switchTimer()
@@ -49,6 +36,75 @@ void OpenGLGraph::switchTimer()
     timerStarted = !timerStarted;
 
     out << "Timer " << (timerStarted ? "started" : "stopped") << "\n";
+}
+
+void OpenGLGraph::generatePrices(std::string path)
+{
+    QTextStream out(stdout);
+
+    std::ifstream file(path);
+    size_t rowsCount = std::count(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>(), '\n');
+    file.seekg(std::ios::beg);
+    prices.reserve(rowsCount);
+    std::string line, word;
+
+    if (file.is_open()) {
+        std::getline(file, line);
+
+        size_t newMaxCandle = 0; 
+        float newMaxPrice = 0, newMinPrice = 1e8;
+        prices.clear();
+        orders.clear();
+        
+        while (std::getline(file, line)) {
+            std::stringstream s(line);
+            Price price = Price(0, 0, 0, 0);
+
+            std::getline(s, word, ',');
+            std::getline(s, word, ',');
+            price.start = std::stof(word);
+            std::getline(s, word, ',');
+            price.max = std::stof(word);
+            std::getline(s, word, ',');
+            price.min = std::stof(word);
+            std::getline(s, word, ',');
+            price.end = std::stof(word);
+            std::getline(s, word, ',');
+            std::getline(s, word, ',');
+
+            ++newMaxCandle;
+            newMaxPrice = std::max(newMaxPrice, price.max);
+            newMinPrice = std::min(newMinPrice, price.min);
+            prices.push_back(price);
+        }
+
+        maxPrice = newMaxPrice;
+        minPrice = newMinPrice;
+        maxCandle = newMaxCandle;
+        currentCandle = 0;
+        
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.11, 0.13, 0.20, 1.0);
+
+        file.close();
+    } else {
+        std::cerr << "Unable to open file";
+    }
+}
+
+void OpenGLGraph::initializeGL()
+{
+    // Open gl
+    initializeOpenGLFunctions();
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&OpenGLGraph::tickTimer));
+
+    // Prices generation
+    generatePrices("../cache/main.csv");
+}
+
+void OpenGLGraph::resizeGL(int w, int h)
+{
+    glViewport(0, 0, w, h); // Set the viewport to cover the entire widget
 }
 
 void OpenGLGraph::tickTimer()
@@ -89,10 +145,10 @@ void OpenGLGraph::paintGL()
     for(size_t thisCandle = currentCandle; thisCandle != 0; --thisCandle)
     {
         Price thisPrice = prices[thisCandle];
-        float priceStart = thisPrice.start / maxPrice * 2 - 1;
-        float priceEnd = thisPrice.end / maxPrice * 2 - 1;
-        float priceMin = thisPrice.min / maxPrice * 2 - 1;
-        float priceMax = thisPrice.max / maxPrice * 2 - 1;
+        float priceStart = (thisPrice.start - minPrice) / (maxPrice - minPrice) * 2 - 1;
+        float priceEnd = (thisPrice.end - minPrice) / (maxPrice - minPrice) * 2 - 1;
+        float priceMin = (thisPrice.min - minPrice) / (maxPrice - minPrice) * 2 - 1;
+        float priceMax = (thisPrice.max - minPrice) / (maxPrice - minPrice) * 2 - 1;
 
         // draw candle
         if(thisPrice.end < thisPrice.start)
@@ -103,15 +159,15 @@ void OpenGLGraph::paintGL()
         glBegin(GL_POLYGON);
         glVertex2f(marginRight, priceStart);
         glVertex2f(marginRight, priceEnd);
-        glVertex2f(marginRight + 0.07, priceEnd);
-        glVertex2f(marginRight + 0.07, priceStart);
+        glVertex2f(marginRight + candleWidth, priceEnd);
+        glVertex2f(marginRight + candleWidth, priceStart);
         glEnd();
 
         glBegin(GL_POLYGON);
-        glVertex2f(marginRight + 0.03, priceMin);
-        glVertex2f(marginRight + 0.03, priceMax);
-        glVertex2f(marginRight + 0.04, priceMax);
-        glVertex2f(marginRight + 0.04, priceMin);
+        glVertex2f(marginRight + candleWidth / 2 - 0.005, priceMin);
+        glVertex2f(marginRight + candleWidth / 2 - 0.005, priceMax);
+        glVertex2f(marginRight + candleWidth / 2 + 0.005, priceMax);
+        glVertex2f(marginRight + candleWidth / 2 + 0.005, priceMin);
         glEnd();
 
         // draw orders
@@ -129,16 +185,31 @@ void OpenGLGraph::paintGL()
                     glColor3f(0.31, 0.86, 0.57);
 
                 glBegin(GL_POLYGON);
-                glVertex2f(marginRight, priceOrder + 0.035);
-                glVertex2f(marginRight, priceOrder - 0.035);
-                glVertex2f(marginRight + 0.07, priceOrder - 0.035);
-                glVertex2f(marginRight + 0.07, priceOrder + 0.035);
+                glVertex2f(marginRight, priceOrder + candleWidth/2);
+                glVertex2f(marginRight, priceOrder - candleWidth/2);
+                glVertex2f(marginRight + candleWidth, priceOrder - candleWidth/2);
+                glVertex2f(marginRight + candleWidth, priceOrder + candleWidth/2);
                 glEnd();
             }
         }
 
-        marginRight -= 0.09;
+        marginRight -= candleWidth + 0.02;
     }
 
     glFlush();
+}
+
+void OpenGLGraph::wheelEvent(QWheelEvent *event) {
+    QPoint numDegrees = event->angleDelta() / 8;
+    QPoint numSteps = numDegrees / 15;
+
+    if (numSteps.y() > 0 && candleWidth < 0.2) 
+    {
+        candleWidth += 0.005; // Zoom in
+    } 
+    else if(candleWidth > 0.03) 
+    {
+        candleWidth -= 0.005; // Zoom out
+    }
+    update(); // Trigger a repaint
 }

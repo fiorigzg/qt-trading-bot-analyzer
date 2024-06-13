@@ -12,14 +12,6 @@ struct Price
     float max;
 };
 
-struct PricesRes
-{
-    PricesRes(std::vector<Price>, float, size_t);
-    std::vector<Price> prices;
-    float maxPrice;
-    size_t maxCandle;
-};
-
 struct Order
 {
     Order(size_t, float, float);
@@ -34,8 +26,6 @@ struct Portfolio
     float usd;
     float othCur;
 };
-
-PricesRes generatePrices();
 
 Order createOrder(Price, size_t);
 #endif // UTILS_H

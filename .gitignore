@@ -5,5 +5,4 @@ CMakeLists.txt.*
 *.idea
 .DB_Store
 venv
-
-
+cmake-build-debug

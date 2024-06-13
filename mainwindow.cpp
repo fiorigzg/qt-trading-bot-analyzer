@@ -3,7 +3,6 @@
 #include "search/choice_dialog.h"
 #include "search/search_dialog.h"
 #include "graph/openglgraph.h"
-
 #include <QProgressBar>
 #include <QtNetwork/qnetworkaccessmanager.h>
 #include <QtNetwork/qnetworkreply.h>
@@ -11,10 +10,18 @@
 #include <QString>
 #include <qstringlist.h>
 #include <QFile>
-#include <QMap>
+#include <QDate>
 #include <QTextStream>
 #include <QMessageBox>
 #include <QDebug>
+
+QString stpBck(const QString &s) {
+    int lastSlashIndex = s.lastIndexOf('/', s.length() - 2); // Find the last slash, ignoring the trailing slash
+    if (lastSlashIndex != -1) {
+        return s.left(lastSlashIndex + 1); // Include the slash at the end of the result
+    }
+    return s; // Return the original string if no slash
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -30,6 +37,12 @@ MainWindow::MainWindow(QWidget *parent)
     openGLLayout->addWidget(openGLGraph);
     openGLBox->setLayout(openGLLayout);
     openGLGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    QDir cacheDir(stpBck(QCoreApplication::applicationDirPath()) + "cache/");
+    QFileInfoList fileList = cacheDir.entryInfoList(QDir::Files);
+    for (const QFileInfo &fileInfo : fileList) {        
+        PathToCsv = fileInfo.absoluteFilePath();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -70,58 +83,19 @@ void MainWindow::on_importFileBtn_clicked()
     }
     else if (selector.response() == 2)
     {
-        SearchDialog stockSearch = SearchDialog(this);
-        QString filePath = "../search/ticker.json";
-        stockSearch.loadSearch(filePath, dictionary);
+        SearchDialog stockSearch = SearchDialog(this, openGLGraph);
+        QString filePath = "search/ticker.json";
+        stockSearch.loadSearch(filePath);
         stockSearch.exec();
+        PathToCsv = stockSearch.getPathToCsv();
     }
 }
 
 void MainWindow::on_runBtn_clicked()
 {
+    qWarning() << PathToCsv; // путь к файлу для построения графика
+    // в папке cache всегда лежит один цсв файл, при скачке он удаляется и
+    // скачивается новый, его пушьте прям на гитхаб он нихуя не весит
+    // Path to Csv тож обновляеостся после каждой скачки
     openGLGraph->switchTimer();
-}
-
-void MainWindow::onDownloadButtonClicked(const QString& ticker) {
-    // QString url = constructYahooFinanceUrl(ticker, startDate, endDate, interval);
-    // QNetworkRequest request{QUrl(url)}; 
-
-    // networkReply = networkManager->get(request);
-
-    // // Connect signals for progress and completion
-    // connect(networkReply, &QNetworkReply::downloadProgress, this, &MainWindow::onDownloadProgress);
-    // connect(networkReply, &QNetworkReply::finished, this, &MainWindow::onDownloadFinished);
-}
-
-void MainWindow::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
-{
-    if (bytesTotal > 0) {
-        progressBar->setValue(static_cast<int>((bytesReceived * 100) / bytesTotal));
-    }
-}
-
-void MainWindow::onDownloadFinished()
-{
-    if (networkReply->error() == QNetworkReply::NoError) {
-        QByteArray data = networkReply->readAll();
-
-        // Save the downloaded data to a file
-        QString fileName = QFileDialog::getSaveFileName(this, tr("Save CSV File"), "", tr("CSV Files (*.csv);;All Files (*)"));
-        if (!fileName.isEmpty()) {
-            QFile file(fileName);
-            if (file.open(QIODevice::WriteOnly)) {
-                file.write(data);
-                file.close();
-                QMessageBox::information(this, tr("Download Complete"), tr("The file has been downloaded successfully."));
-            } else {
-                QMessageBox::warning(this, tr("File Error"), tr("Unable to save the file."));
-            }
-        }
-    } else {
-        QMessageBox::warning(this, tr("Download Error"), tr("Failed to download the file."));
-    }
-
-    networkReply->deleteLater();
-    networkReply = nullptr;
-    progressBar->setValue(0);
 }
