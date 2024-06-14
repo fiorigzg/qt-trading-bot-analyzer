@@ -200,7 +200,7 @@ font-weight: 600;</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_5">
              <item row="0" column="0">
-              <widget class="QScrollArea" name="scrollArea">
+              <widget class="QScrollArea" name="ordersMenu">
                <property name="widgetResizable">
                 <bool>true</bool>
                </property>

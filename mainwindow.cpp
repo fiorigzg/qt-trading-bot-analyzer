@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QString>
 #include <qstringlist.h>
+#include <QVBoxLayout>
 #include <QFile>
 #include <QDate>
 #include <QTextStream>
@@ -31,9 +32,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto *portfolio = findChild<QLabel*>("portfolio");
 
+    auto *ordersMenu = findChild<QScrollArea*>("ordersMenu");
+    QWidget *orders = new QWidget();
+    ordersMenu->setWidget(orders);
+    QVBoxLayout *ordersContainer = new QVBoxLayout(orders);
+
     auto *openGLBox = findChild<QWidget*>("openGLBox");
     QVBoxLayout *openGLLayout = new QVBoxLayout(openGLBox);
-    openGLGraph = new OpenGLGraph(openGLBox, portfolio);
+
+    openGLGraph = new OpenGLGraph(openGLBox, portfolio, ordersContainer);
     openGLLayout->addWidget(openGLGraph);
     openGLBox->setLayout(openGLLayout);
     openGLGraph->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

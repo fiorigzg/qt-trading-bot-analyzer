@@ -5,6 +5,7 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#include <QVBoxLayout>
 #include <QTimer>
 #include <QLabel>
 #include <GL/gl.h>
@@ -16,7 +17,7 @@ class OpenGLGraph : public QOpenGLWidget, protected QOpenGLFunctions
     Q_OBJECT
 
 public:
-    OpenGLGraph(QWidget *parent = nullptr, QLabel *portfolio = nullptr);
+    OpenGLGraph(QWidget *parent = nullptr, QLabel *portfolio = nullptr, QVBoxLayout *ordersContainer = nullptr);
     void switchTimer();
     void generatePrices(std::string);
 
@@ -40,6 +41,7 @@ private:
     bool timerStarted = false;
 
     QLabel *portfolio;
+    QVBoxLayout *ordersContainer;
     QTimer *timer = new QTimer(this);
 };
 

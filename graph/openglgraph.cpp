@@ -17,8 +17,8 @@
 #include <map>
 
 
-OpenGLGraph::OpenGLGraph(QWidget *parent, QLabel *portfolio)
-    : QOpenGLWidget(parent), portfolio(portfolio)
+OpenGLGraph::OpenGLGraph(QWidget *parent, QLabel *portfolio, QVBoxLayout *ordersContainer)
+    : QOpenGLWidget(parent), portfolio(portfolio), ordersContainer(ordersContainer)
 {
 }
 
@@ -123,6 +123,19 @@ void OpenGLGraph::tickTimer()
         orders.push_back(newOrder);
         portfolioSum.usd += newOrder.sum;
         portfolioSum.othCur += newOrder.sum / newOrder.price;
+
+        QLabel *label = new QLabel(QString::number(newOrder.sum), this);
+        label->setMaximumHeight(50);
+        label->setAlignment(Qt::AlignCenter);
+        QFont font("Arial", 14);
+        label->setFont(font);
+
+        // Set the style sheet for green background and rounded corners
+        std::string backgroundColor = newOrder.sum < 0 ? "#ff304f" : "#4fdb91";
+        std::string labelStyle = "background-color: " + backgroundColor + "; color: white; padding: 10px; margin-right: 8px; border: 1px solid black; border-radius: 7px;";
+        label->setStyleSheet(QString::fromStdString(labelStyle));
+
+        ordersContainer->insertWidget(0, label);
         out << "Order " << newOrder.price << " " << newOrder.sum << "\n";
     }
     portfolio->setText(QString::number(portfolioSum.usd + portfolioSum.othCur * prices[currentCandle].end));
